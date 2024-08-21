@@ -1,5 +1,5 @@
 import store from "../store/store";
-import save from "../store/user";
+import save from "../store/employee";
 
 export default function Home() {
 
