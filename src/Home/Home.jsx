@@ -1,9 +1,19 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+
+import { Dropdown } from 'primereact/dropdown';
+import { Calendar } from 'primereact/calendar';
+import Modal from 'elias-mennrath_modal-pkg';
+// import Modal from "../components/Modal/Modal";
+        
 
 import store from "../store/store";
-import save from "../store/employee";
+import { save } from "../store/employee";
+import { states, departements } from "../../data.js";
 
 import "./home.css";
+
+import 'primeicons/primeicons.css';
 
 export default function Home() {
 
@@ -17,82 +27,64 @@ export default function Home() {
     const [zipCode, setZipCode] = useState("");
     const [department, setDepartment] = useState("");
 
+
+
+    
+
     function handleSubmit(e) {
+        console.log("handleSubmit");
         e.preventDefault();
 
-        if(store.dispatch(save({ firstName, lastName, dateOfBirth, startDate, department, street, city, state, zipCode }))) {
-            displayModal();
-        }
-
+        store.dispatch(save({ firstName, lastName, dateOfBirth, startDate, department, street, city, state, zipCode }));
         
-        
-        // const employee = {
-        //     firstName: formData.get("first-name"),
-        //     lastName: formData.get("last-name"),    
-        //     dateOfBirth: formData.get("date-of-birth"),
-        //     startDate: formData.get("start-date"),
-        //     department: formData.get("department"),
-        //     street: formData.get("street"),
-        //     city: formData.get("city"),
-        //     state: formData.get("state"),
-        //     zipCode: formData.get("zip-code")
-        // };
-        
-        // store.dispatch(save({ employee }));
     }
 
-    function displayModal() {
-
-    }
-
+    let test = <div>Heelo <span>world</span></div>;
 
 
     return (
         <div className="container">
-            {/* Link */}
+            <Link to="/employees">View current employees</Link>
             <h2>Create Employee</h2>
             <form action="#" id="create-employee" onSubmit={handleSubmit}>
                 <label htmlFor="firstName">First Name: </label>
-                <input onChange={(e) => setFirstName(e.target.value)} type="text" id="firstName" name="firstName" />
+                <input onChange={(e) => setFirstName(e.target.value)} type="text" id="firstName" name="firstName" className="p-inputtext" />
 
                 <label htmlFor="lastName">Last Name: </label>
-                <input onChange={(e) => setLastName(e.target.value)} type="text" id="lastName" name="lastName" />
+                <input onChange={(e) => setLastName(e.target.value)} type="text" id="lastName" name="lastName" className="p-inputtext" />
 
                 <label htmlFor="dateOfBirth">Date of Birth: </label>
-                <input onChange={(e) => setDateOfBirth(e.target.value)} id="dateOfBirth" name="dateOfBirth" type="text" />
+                <Calendar value={dateOfBirth} onChange={(e) => setDateOfBirth(e.value)} showButtonBar inputId="dateOfBirth" />
 
                 <label htmlFor="startDate">Start date: </label>
-                <input onChange={(e) => setStartDate(e.target.value)} id="startDate" name="startDate" type="text" />
+                <Calendar value={startDate} onChange={(e) => setStartDate(e.value)} showButtonBar inputId="startDate" />
+
 
                 <fieldset className="address">
                     <legend>Address</legend>
 
                     <label htmlFor="street">Street</label>
-                    <input onChange={(e) => setStreet(e.target.value)} id="street" name="street" type="text" />
+                    <input onChange={(e) => setStreet(e.target.value)} id="street" name="street" type="text" className="p-inputtext" />
 
                     <label htmlFor="city">City</label>
-                    <input onChange={(e) => setCity(e.target.value)} id="city" name="city" type="text" />
+                    <input onChange={(e) => setCity(e.target.value)} id="city" name="city" type="text" className="p-inputtext" />
 
                     <label htmlFor="state">State</label>
-                    <select onChange={(e) => setState(e.target.value)} name="state" id="state"></select>
+                    <Dropdown inputId="state" value={state} onChange={(e)=>setState(e.value)} options={states}  variant="filled" className="p-dropdown" />
 
                     <label htmlFor="zipCode">Zip Code</label>
-                    <input onChange={(e) => setZipCode(e.target.value)} id="zipCode" name="zipCode" type="number" />
+                    <input onChange={(e) => setZipCode(e.target.value)} id="zipCode" name="zipCode" type="number" className="p-inputtext"/>
                 </fieldset>
 
-                <label htmlFor="department">Department: </label>
-                <select onChange={(e) => setDepartment(e.target.value)} name="department" id="department">
-                    <option>Sales</option>
-                    <option>Marketing</option>
-                    <option>Engineering</option>
-                    <option>Human Resources</option>
-                    <option>Legal</option>
-                </select>
-
-                <button type="submit">Save</button>
+                <label htmlFor="departement">Department: </label>
+                <Dropdown inputId="departement" value={department} onChange={(e)=>setDepartment(e.value)} options={departements}  variant="filled" className="p-dropdown" />
+                
             </form>
 
-            <div id="confirmation" className="modal">Employee created !</div>
+            <Modal body="Employee Created!" header={test} outsideClick={true} > 
+                <button type="submit" className="p-button" onClick={(e) => handleSubmit(e)}>Save</button>
+            </Modal>
+
         </div>
     );
 }
