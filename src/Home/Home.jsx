@@ -1,11 +1,13 @@
+import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
-import Modal from 'elias-mennrath_modal-pkg';
-// import Modal from "../components/Modal/Modal";
-        
+
+const Modal =  React.lazy(() => import('elias-mennrath_modal-pkg')); // Lazy loaded + dynamic import
+import { Suspense } from "react"; // Handle behavior waiting for lazy loaded component
+
 
 import store from "../store/store";
 import { save } from "../store/employee";
@@ -81,9 +83,11 @@ export default function Home() {
                 
             </form>
 
-            <Modal body="Employee Created!" header={test} outsideClick={true} > 
-                <button type="submit" className="p-button" onClick={(e) => handleSubmit(e)}>Save</button>
-            </Modal>
+            <Suspense fallback={<div>Loading...</div>}>
+                <Modal body="Employee Created!" header={test} outsideClick={true} > 
+                    <button type="submit" className="p-button" onClick={(e) => handleSubmit(e)}>Save</button>
+                </Modal>
+            </Suspense>
 
         </div>
     );
